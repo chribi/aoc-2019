@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibAoc", "LibAoc\LibAoc.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aoc01", "Aoc01\Aoc01.csproj", "{97A88BC0-D9EF-4E38-8615-C43D2F7CC8B4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aoc02", "Aoc02\Aoc02.csproj", "{2777B2A1-0536-4A55-8783-41D7657FD3F9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{97A88BC0-D9EF-4E38-8615-C43D2F7CC8B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{97A88BC0-D9EF-4E38-8615-C43D2F7CC8B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{97A88BC0-D9EF-4E38-8615-C43D2F7CC8B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2777B2A1-0536-4A55-8783-41D7657FD3F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2777B2A1-0536-4A55-8783-41D7657FD3F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2777B2A1-0536-4A55-8783-41D7657FD3F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2777B2A1-0536-4A55-8783-41D7657FD3F9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

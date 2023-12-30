@@ -10,5 +10,5 @@ if (args.Length == 0) {
     EnableLogging = true;
 } else {
     Utils.AocMain(args, SolvePart1);
-    // Utils.AocMain(args, SolvePart1);
+    // Utils.AocMain(args, SolvePart2);
 }
