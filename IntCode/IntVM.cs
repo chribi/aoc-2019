@@ -52,9 +52,12 @@ public sealed partial class IntVM {
         }
 
         try {
+            // remember IP for Jump detection
+            var ip = IP;
             var args = GetParams(instr.ArgCount);
             instr.Exec(this, args);
-            IP += instr.ArgCount + 1;
+            if (IP == ip)
+                IP += instr.ArgCount + 1;
         } catch (Exception e) {
             State = VMState.ExitFail;
             throw new Errors.VMExecutionException($"Error executing {opCode} ({instr.Name}) at IP = {IP}: {e.Message}", e);
