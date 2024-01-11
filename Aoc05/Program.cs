@@ -1,9 +1,16 @@
 using LibAoc;
 using static LibAoc.LogUtils;
-using static LibAoc.Test;
+
+using IntCode;
+using IntCode.IO;
 
 int SolvePart1(IEnumerable<string> input) {
-    return 0;
+    var inp = new StaticInput(new[] { 1 });
+    var output = new CollectedStdout();
+
+    var vm = new IntVM(input.First(), inp, output);
+    vm.Run();
+    return output.Output.Last();
 }
 
 if (args.Length == 0) {
