@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntCode", "IntCode\IntCode.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntCode.Test", "IntCode.Test\IntCode.Test.csproj", "{CF90F322-0720-468F-9B54-BAF16127C073}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aoc06", "Aoc06\Aoc06.csproj", "{75CA52EF-0C4A-419E-9FB6-9C88CDA23401}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,5 +62,9 @@ Global
 		{CF90F322-0720-468F-9B54-BAF16127C073}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF90F322-0720-468F-9B54-BAF16127C073}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF90F322-0720-468F-9B54-BAF16127C073}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75CA52EF-0C4A-419E-9FB6-9C88CDA23401}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75CA52EF-0C4A-419E-9FB6-9C88CDA23401}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75CA52EF-0C4A-419E-9FB6-9C88CDA23401}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75CA52EF-0C4A-419E-9FB6-9C88CDA23401}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
