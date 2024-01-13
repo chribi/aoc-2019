@@ -3,12 +3,12 @@ using static LibAoc.LogUtils;
 using static LibAoc.Test;
 using IntCode;
 
-int SolvePart1(IEnumerable<string> input) {
+long SolvePart1(IEnumerable<string> input) {
     var vm = new IntVM(input.First());
     return Run(vm, 12, 2);
 }
 
-int SolvePart2(IEnumerable<string> input) {
+long SolvePart2(IEnumerable<string> input) {
     var vm = new IntVM(input.First());
     var target = 19690720;
     for (var sum = 1; ; sum++) {
@@ -20,7 +20,7 @@ int SolvePart2(IEnumerable<string> input) {
     }
 }
 
-int Run(IntVM vm, int noun, int verb) {
+long Run(IntVM vm, long noun, long verb) {
     vm.Reset();
     vm.Memory[1] = noun;
     vm.Memory[2] = verb;

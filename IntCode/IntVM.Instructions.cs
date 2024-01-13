@@ -1,10 +1,10 @@
 namespace IntCode;
 
 public sealed partial class IntVM {
-    private static Dictionary<int, Instr> OpTable;
+    private static Dictionary<long, Instr> OpTable;
 
     static IntVM() {
-        OpTable = new Dictionary<int, Instr>();
+        OpTable = new Dictionary<long, Instr>();
 
         // day 2
         OpTable[99] = new Instr(0, "EXIT", Exit);

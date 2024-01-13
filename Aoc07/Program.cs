@@ -5,19 +5,19 @@ using static LibAoc.Test;
 using IntCode;
 using IntCode.IO;
 
-int SolvePart1(IEnumerable<string> input) {
+long SolvePart1(IEnumerable<string> input) {
     var program = IntVM.Read(input.First());
-    var (best, _) = Optimize(AmpChain(program), Enumerable.Range(0, 5).ToArray());
+    var (best, _) = Optimize(AmpChain(program), new long[] { 0, 1, 2, 3, 4 });
     return best;
 }
 
-int SolvePart2(IEnumerable<string> input) {
+long SolvePart2(IEnumerable<string> input) {
     var program = IntVM.Read(input.First());
-    var (best, _) = Optimize(AmpLoop(program), Enumerable.Range(5, 5).ToArray());
+    var (best, _) = Optimize(AmpLoop(program), new long[] { 5, 6, 7, 8, 9 });
     return best;
 }
 
-IntVM[] AmpChain(int[] program) {
+IntVM[] AmpChain(long[] program) {
     var vms = new IntVM[5];
     var linkBack = new ChainIO();
     for (var i = 0; i < 5; i++) {
@@ -30,7 +30,7 @@ IntVM[] AmpChain(int[] program) {
     return vms;
 }
 
-IntVM[] AmpLoop(int[] program) {
+IntVM[] AmpLoop(long[] program) {
     var chain = AmpChain(program);
     var loopLink = chain[0].Input as ChainIO;
     chain[^1].Output = loopLink!;
@@ -38,7 +38,7 @@ IntVM[] AmpLoop(int[] program) {
     return chain;
 }
 
-int RunAmps(IntVM[] amps, int[] phaseSettings) {
+long RunAmps(IntVM[] amps, long[] phaseSettings) {
     for (var i = 0; i < amps.Length; i++) {
         amps[i].Reset();
     }
@@ -62,9 +62,9 @@ int RunAmps(IntVM[] amps, int[] phaseSettings) {
     return (amps[^1].Output as ChainIO)!.Values.Dequeue();
 }
 
-(int, int[]) Optimize(IntVM[] ampChain, int[] phaseOptions) {
-    var best = int.MinValue;
-    var bestSettings = Array.Empty<int>();
+(long, long[]) Optimize(IntVM[] ampChain, long[] phaseOptions) {
+    var best = long.MinValue;
+    var bestSettings = Array.Empty<long>();
     foreach (var phaseSettings in Permutations(phaseOptions)) {
         var result = RunAmps(ampChain, phaseSettings);
         if (result > best) {
@@ -78,10 +78,10 @@ int RunAmps(IntVM[] amps, int[] phaseSettings) {
 }
 
 // Generates permuations in-place
-IEnumerable<int[]> Permutations(int[] list) {
+IEnumerable<long[]> Permutations(long[] list) {
     return perms(0);
 
-    IEnumerable<int[]> perms(int keep) {
+    IEnumerable<long[]> perms(long keep) {
         if (keep == list.Length) yield return list;
         for (var i = keep; i < list.Length; i++) {
             swap(i, keep);
@@ -90,7 +90,7 @@ IEnumerable<int[]> Permutations(int[] list) {
         }
     }
 
-    void swap(int i, int j) {
+    void swap(long i, long j) {
         var tmp = list[i];
         list[i] = list[j];
         list[j] = tmp;
@@ -99,14 +99,14 @@ IEnumerable<int[]> Permutations(int[] list) {
 
 if (args.Length == 0) {
     EnableLogging = true;
-    AssertEqual(Permutations(new[] { 1, 2, 3 }).Count(), 6);
-    AssertEqual(Permutations(new[] { 1, 2, 3, 4 }).Count(), 24);
+    AssertEqual(Permutations(new long[] { 1, 2, 3 }).Count(), 6);
+    AssertEqual(Permutations(new long[] { 1, 2, 3, 4 }).Count(), 24);
 
     var sample1 = "3,15,3,16,1002,16,10,16,1,16,15,15,4,15,99,0,0";
     AssertEqual(SolvePart1(new[] { sample1 }), 43210);
     var sample2 = "3,26,1001,26,-4,26,3,27,1002,27,2,27,1,27,26,27,4,27,1001,28,-1,28,1005,28,6,99,0,0,5";
     var loop = AmpLoop(IntVM.Read(sample2));
-    AssertEqual(RunAmps(loop, new [] { 9, 8, 7, 6, 5 }), 139629729);
+    AssertEqual(RunAmps(loop, new long[] { 9, 8, 7, 6, 5 }), 139629729);
     AssertEqual(SolvePart2(new[] { sample2 }), 139629729);
 } else {
     Utils.AocMain(args, SolvePart1);

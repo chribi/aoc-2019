@@ -1,7 +1,7 @@
 namespace IntCode.IO;
 
 public interface VMInput {
-    int Read();
+    long Read();
     void Reset();
 }
 
@@ -15,10 +15,10 @@ public sealed class Stdin : VMInput {
         _retryOnError = retryOnError;
     }
 
-    public int Read() {
+    public long Read() {
         var input = Console.ReadLine();
         read:
-        if (!int.TryParse(input, out var number)) {
+        if (!long.TryParse(input, out var number)) {
             if (_retryOnError) goto read; // I use goto, sue me
             throw new Errors.BadInputException(input ?? "<null>");
         }
@@ -30,13 +30,13 @@ public sealed class Stdin : VMInput {
 }
 
 public sealed class StaticInput : VMInput {
-    private readonly int[] _input;
+    private readonly long[] _input;
     private int _pos = 0;
-    public StaticInput(IEnumerable<int> input) {
+    public StaticInput(IEnumerable<long> input) {
         _input = input.ToArray();
     }
 
-    public int Read()
+    public long Read()
     {
         if (_pos >= _input.Length) {
             throw new Errors.BadInputException($"ReadCount = {_pos + 1}", "Too many Reads!");

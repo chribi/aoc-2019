@@ -1,12 +1,12 @@
 namespace IntCode.IO;
 
 public interface VMOutput {
-    void Write(int number);
+    void Write(long number);
     void Reset();
 }
 
 public sealed class Stdout : VMOutput {
-    public void Write(int number) {
+    public void Write(long number) {
         Console.WriteLine(number);
     }
 
@@ -14,9 +14,9 @@ public sealed class Stdout : VMOutput {
 }
 
 public sealed class CollectOutput : VMOutput {
-    public List<int> Output { get; } = new List<int>();
+    public List<long> Output { get; } = new List<long>();
 
-    public void Write(int number) {
+    public void Write(long number) {
         Output.Add(number);
     }
 
@@ -27,7 +27,7 @@ public sealed class CollectedStdout : VMOutput {
     private CollectOutput _collect = new CollectOutput();
     private Stdout _stdout = new Stdout();
 
-    public List<int> Output => _collect.Output;
+    public List<long> Output => _collect.Output;
 
     public void Reset()
     {
@@ -35,7 +35,7 @@ public sealed class CollectedStdout : VMOutput {
         _stdout.Reset();
     }
 
-    public void Write(int number)
+    public void Write(long number)
     {
         _collect.Write(number);
         _stdout.Write(number);

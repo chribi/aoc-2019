@@ -4,8 +4,8 @@ using static LibAoc.LogUtils;
 using IntCode;
 using IntCode.IO;
 
-int SolvePart1(IEnumerable<string> input) {
-    var inp = new StaticInput(new[] { 1 });
+long SolvePart1(IEnumerable<string> input) {
+    var inp = new StaticInput(new[] { 1L });
     var output = new CollectedStdout();
 
     var vm = new IntVM(input.First(), inp, output);
@@ -13,8 +13,8 @@ int SolvePart1(IEnumerable<string> input) {
     return output.Output.Last();
 }
 
-int SolvePart2(IEnumerable<string> input) {
-    var inp = new StaticInput(new[] { 5 });
+long SolvePart2(IEnumerable<string> input) {
+    var inp = new StaticInput(new[] { 5L });
     var output = new CollectedStdout();
 
     var vm = new IntVM(input.First(), inp, output);
