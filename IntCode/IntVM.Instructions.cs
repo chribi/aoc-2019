@@ -20,6 +20,9 @@ public sealed partial class IntVM {
 
         OpTable[7] = new Instr(3, "LT", LessThan);
         OpTable[8] = new Instr(3, "EQ", Equal);
+
+        // day 9
+        OpTable[9] = new Instr(1, "ARBP", AdjustRelativeBase);
     }
 
     private static void Add(IntVM vm, Param[] args) {
@@ -78,4 +81,10 @@ public sealed partial class IntVM {
         var b = vm.Eval(args[1]);
         vm.Set(args[2], a == b ? 1 : 0);
     }
+
+    private static void AdjustRelativeBase(IntVM vm, Param[] args) {
+        var a = vm.Eval(args[0]);
+        vm.RBP += a;
+    }
+
 }

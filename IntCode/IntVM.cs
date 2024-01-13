@@ -7,14 +7,17 @@ using System.Text.RegularExpressions;
 
 public sealed partial class IntVM {
     public enum VMState { Running, ExitOk, ExitFail, Blocked }
-    public enum ParamMode { Position, Immediate }
+    public enum ParamMode { Position, Immediate, Relative }
     public record struct Param(ParamMode Mode, int N);
     public record class Instr(int ArgCount, string Name, Action<IntVM, Param[]> Exec);
 
     private readonly int[] _initial;
 
     public int[] Memory { get; private set; } = Array.Empty<int>();
+    private const int PAGESIZE = 256;
+    public Dictionary<int, int[]> AdditionalMemoryPages = new Dictionary<int, int[]>();
     public int IP { get; private set; }
+    public int RBP { get; private set; }
     public VMInput Input { get; set; }
     public VMOutput Output { get; set; }
     public VMState State { get; private set; }
@@ -32,7 +35,9 @@ public sealed partial class IntVM {
 
     public void Reset() {
         Memory = (int[])_initial.Clone();
+        AdditionalMemoryPages.Clear();
         IP = 0;
+        RBP = 0;
         Input.Reset();
         Output.Reset();
         State = VMState.Running;
@@ -65,6 +70,8 @@ public sealed partial class IntVM {
                 IP += instr.ArgCount + 1;
         } catch (Exception e) {
             State = VMState.ExitFail;
+
+            DumpMem();
             throw new Errors.VMExecutionException($"Error executing {opCode} ({instr.Name}) at IP = {IP}: {e.Message}", e);
         }
     }
@@ -105,16 +112,29 @@ public sealed partial class IntVM {
 
     private int Eval(Param p) {
         return p.Mode switch {
-            ParamMode.Position => Memory[p.N],
+            ParamMode.Position => SaveAccessMem(p.N),
             ParamMode.Immediate => p.N,
+            ParamMode.Relative => SaveAccessMem(RBP + p.N),
             _ => throw new ArgumentOutOfRangeException(nameof(p.Mode)),
         };
     }
 
+    private ref int SaveAccessMem(int index) {
+        if (index < Memory.Length) return ref Memory[index];
+        var pageNum = index / PAGESIZE;
+        var pageOffset = index % PAGESIZE;
+        if (!AdditionalMemoryPages.TryGetValue(pageNum, out var page)) {
+            page = new int[PAGESIZE];
+            AdditionalMemoryPages[pageNum] = page;
+        }
+        return ref page[pageOffset];
+    }
+
     private void Set(Param p, int value) {
-        if (p.Mode != ParamMode.Position)
+        if (p.Mode == ParamMode.Immediate)
             throw new InvalidOperationException("Can't set immediate value");
-        Memory[p.N] = value;
+        var memLocation = p.Mode == ParamMode.Position ? p.N : RBP + p.N;
+        SaveAccessMem(memLocation) = value;
     }
 
     public static int[] Read(string line) {
