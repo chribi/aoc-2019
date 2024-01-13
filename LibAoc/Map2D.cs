@@ -105,6 +105,87 @@ public record struct Line(Point2D P, Point2D Q) {
     }
 }
 
+public class Map2D {
+    private char[,] _data;
+    public int Width { get; }
+    public int Height { get; }
+
+    public Map2D(IList<string> lines) {
+        Width = lines.First().Length;
+        Height = lines.Count();
+        _data = new char[Height, Width];
+        for (var row = 0; row < Height; row++) {
+            for (var col = 0; col < Width; col++) {
+                _data[row, col] = lines[row][col];
+            }
+        }
+    }
+
+    public Map2D(int width, int height, char initial = ' ') {
+        Width = width;
+        Height = height;
+        _data = new char[Height, Width];
+        for (var row = 0; row < Height; row++) {
+            for (var col = 0; col < Width; col++) {
+                _data[row, col] = initial;
+            }
+        }
+    }
+
+    public char this[int row, int col] {
+        get => _data[row, col];
+        set => _data[row, col] = value;
+    }
+
+    public char[] GetRow(int row) {
+        var result = new char[Width];
+        for (var i = 0; i < Width; i++) result[i] = _data[row, i];
+        return result;
+    }
+
+    public char[] GetCol(int col) {
+        var result = new char[Height];
+        for (var i = 0; i < Height; i++) result[i] = _data[i, col];
+        return result;
+    }
+
+    public IEnumerable<char> Data() {
+        foreach (var (row, col) in Positions()) {
+            yield return _data[row, col];
+        }
+    }
+
+    public IEnumerable<(int Row, int Col)> Positions() {
+        for (var row = 0; row < Height; row++) {
+            for (var col = 0; col < Width; col++) {
+                yield return (row, col);
+            }
+        }
+    }
+
+    public void Print() {
+        for (var row = 0; row < Height; row++) {
+            Console.WriteLine(new string(GetRow(row)));
+        }
+    }
+
+    public void PrintColored(Func<char, ConsoleColor?> coloring) {
+        for (var row = 0; row < Height; row++) {
+            for (var col = 0; col < Width; col++) {
+                var c = _data[row, col];
+                var color = coloring(c);
+                if (color is null) {
+                    Console.ResetColor();
+                } else {
+                    Console.BackgroundColor = color.Value;
+                }
+                Console.Write(c);
+            }
+            Console.ResetColor();
+            Console.WriteLine();
+        }
+    }
+}
 
 public enum Direction { U, R, D, L }
 
