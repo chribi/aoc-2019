@@ -27,6 +27,14 @@ public record struct Point2D(long Row, long Col) {
         return new Point2D(value.Item1, value.Item2);
     }
 
+    public static Point2D operator +(Point2D a, Point2D b) {
+        return new Point2D(a.Row + b.Row, a.Col + b.Col);
+    }
+
+    public static Point2D operator -(Point2D a, Point2D b) {
+        return new Point2D(a.Row - b.Row, a.Col - b.Col);
+    }
+
     /// <summary>
     /// Manhattan distance
     /// </summary>
