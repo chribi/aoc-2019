@@ -39,11 +39,19 @@ public sealed partial class IntVM {
     }
 
     private static void ReadInput(IntVM vm, Param[] args) {
-        vm.Set(args[0], vm.Input.Read());
+        if (vm.Input is IO.VMBlockingInput blocking && !blocking.CanRead()) {
+            vm.Log($"Blocked on INP");
+            vm.State = VMState.Blocked;
+            return;
+        }
+        var result = vm.Input.Read();
+        vm.Log($"INP <- {result}");
+        vm.Set(args[0], result);
     }
 
     private static void WriteOutput(IntVM vm, Param[] args) {
         var a = vm.Eval(args[0]);
+        vm.Log($"PRNT -> {a}");
         vm.Output.Write(a);
     }
 

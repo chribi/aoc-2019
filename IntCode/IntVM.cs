@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 public sealed partial class IntVM {
-    public enum VMState { Running, ExitOk, ExitFail }
+    public enum VMState { Running, ExitOk, ExitFail, Blocked }
     public enum ParamMode { Position, Immediate }
     public record struct Param(ParamMode Mode, int N);
     public record class Instr(int ArgCount, string Name, Action<IntVM, Param[]> Exec);
@@ -15,9 +15,10 @@ public sealed partial class IntVM {
 
     public int[] Memory { get; private set; } = Array.Empty<int>();
     public int IP { get; private set; }
-    public VMInput Input { get; }
-    public VMOutput Output { get; }
+    public VMInput Input { get; set; }
+    public VMOutput Output { get; set; }
     public VMState State { get; private set; }
+    public Action<object[]>? LogCallback { get; set; }
 
     public IntVM(int[] memory, VMInput? input = null, VMOutput? output = null) {
         _initial = memory;
@@ -38,6 +39,10 @@ public sealed partial class IntVM {
     }
 
     public void Run() {
+        if (State == VMState.Blocked) {
+            State = VMState.Running;
+        }
+
         while (State == VMState.Running) {
             Step();
         }
@@ -56,7 +61,7 @@ public sealed partial class IntVM {
             var ip = IP;
             var args = GetParams(instr.ArgCount);
             instr.Exec(this, args);
-            if (IP == ip)
+            if (IP == ip && State != VMState.Blocked)
                 IP += instr.ArgCount + 1;
         } catch (Exception e) {
             State = VMState.ExitFail;
@@ -92,6 +97,10 @@ public sealed partial class IntVM {
         return result;
     }
 
+    private void Log(params object[] values) {
+        LogCallback?.Invoke(values);
+    }
+
     private static int GetOpCode(int value) => value % 100;
 
     private int Eval(Param p) {
@@ -108,7 +117,7 @@ public sealed partial class IntVM {
         Memory[p.N] = value;
     }
 
-    private static int[] Read(string line) {
+    public static int[] Read(string line) {
         var nums = new Regex(@"-?\d+").Matches(line);
         return nums.Select(m => int.Parse(m.Value)).ToArray();
     }

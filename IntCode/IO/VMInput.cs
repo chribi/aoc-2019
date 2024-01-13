@@ -5,6 +5,10 @@ public interface VMInput {
     void Reset();
 }
 
+public interface VMBlockingInput : VMInput {
+    bool CanRead();
+}
+
 public sealed class Stdin : VMInput {
     private readonly bool _retryOnError;
     public Stdin(bool retryOnError = true) {
