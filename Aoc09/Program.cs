@@ -5,8 +5,20 @@ using static LibAoc.Test;
 using IntCode;
 using IntCode.IO;
 
-int SolvePart1(IEnumerable<string> input) {
-    return 0;
+long SolvePart1(IEnumerable<string> input) {
+    var vmInput = new StaticInput(new long[] { 1 });
+    var vmOutput = new CollectedStdout();
+    var vm = new IntVM(input.First(), vmInput, vmOutput);
+    vm.Run();
+    return vmOutput.Output.Single();
+}
+
+long SolvePart2(IEnumerable<string> input) {
+    var vmInput = new StaticInput(new long[] { 2 });
+    var vmOutput = new CollectedStdout();
+    var vm = new IntVM(input.First(), vmInput, vmOutput);
+    vm.Run();
+    return vmOutput.Output.Single();
 }
 
 if (args.Length == 0) {
@@ -19,5 +31,5 @@ if (args.Length == 0) {
     AssertEqualLists(output.Output, code, "Quine");
 } else {
     Utils.AocMain(args, SolvePart1);
-    // Utils.AocMain(args, SolvePart2);
+    Utils.AocMain(args, SolvePart2);
 }
