@@ -145,6 +145,11 @@ public class Map2D {
         set => _data[row, col] = value;
     }
 
+    public char this[Point2D pos] {
+        get => _data[pos.Row, pos.Col];
+        set => _data[pos.Row, pos.Col] = value;
+    }
+
     public char[] GetRow(int row) {
         var result = new char[Width];
         for (var i = 0; i < Width; i++) result[i] = _data[row, i];
@@ -206,6 +211,14 @@ public static class Map2DExtensions {
             'L' => Direction.L,
             _ => throw new ArgumentOutOfRangeException(nameof(c), c, $"Invalid Direction: {c}"),
         };
+    }
+
+    public static Direction NextClockwise(this Direction d) {
+        return (Direction)(((int)d + 1) % 4);
+    }
+
+    public static Direction NextCounterClockwise(this Direction d) {
+        return (Direction)(((int)d + 3) % 4);
     }
 
     public static (long DRow, long DCol) AsVector(this Direction d) {
