@@ -140,6 +140,14 @@ public class Map2D {
         }
     }
 
+    public Map2D Clone() {
+        var clone = new Map2D(Width, Height);
+        foreach (var pos in Positions()) {
+            clone[pos] = this[pos];
+        }
+        return clone;
+    }
+
     public char this[int row, int col] {
         get => _data[row, col];
         set => _data[row, col] = value;

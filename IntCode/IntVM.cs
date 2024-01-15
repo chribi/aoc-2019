@@ -5,6 +5,8 @@ using IntCode.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 
+public record class VMSnapshot(long[] Memory, Dictionary<long, long[]> MemPages, long IP, long RBP);
+
 public sealed partial class IntVM {
     public enum VMState { Running, ExitOk, ExitFail, Blocked }
     public enum ParamMode { Position, Immediate, Relative }
@@ -22,6 +24,26 @@ public sealed partial class IntVM {
     public VMOutput Output { get; set; }
     public VMState State { get; private set; }
     public Action<object[]>? LogCallback { get; set; }
+
+    public VMSnapshot CreateSnapshot() {
+        var mem = (long[]) Memory.Clone();
+        var pages = new Dictionary<long, long[]>();
+        foreach (var page in AdditionalMemoryPages) {
+            pages.Add(page.Key, (long[])page.Value.Clone());
+        }
+        return new VMSnapshot(mem, pages, IP, RBP);
+    }
+
+    public void LoadSnapshot(VMSnapshot snapshot) {
+        Memory = (long[])snapshot.Memory.Clone();
+        AdditionalMemoryPages.Clear();
+        foreach (var page in snapshot.MemPages) {
+            AdditionalMemoryPages.Add(page.Key, (long[])page.Value.Clone());
+        }
+        IP = snapshot.IP;
+        RBP = snapshot.RBP;
+        State = VMState.Running;
+    }
 
     public IntVM(long[] memory, VMInput? input = null, VMOutput? output = null) {
         _initial = memory;
